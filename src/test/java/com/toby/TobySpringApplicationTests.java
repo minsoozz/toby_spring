@@ -34,7 +34,8 @@ class TobySpringApplicationTests {
 
   @BeforeEach
   public void setUp() throws SQLException, ClassNotFoundException {
-
+    System.out.println("this.context = " + this.context);
+    System.out.println("this = " + this);
   }
 
   @Test

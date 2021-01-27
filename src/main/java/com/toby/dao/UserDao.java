@@ -2,19 +2,28 @@ package com.toby.dao;
 
 import com.toby.model.User;
 import java.sql.*;
+import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 public class UserDao {
 
-  private ConnectionMaker connectionMaker;
+  private JdbcTemplate jdbcTemplate;
 
-  public UserDao(ConnectionMaker connectionMaker) {
-    this.connectionMaker = connectionMaker;
+  public void setDataSource(DataSource dataSource) {
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+    this.dataSource = dataSource;
+  }
+
+  private DataSource dataSource;
+
+  public UserDao(DataSource dataSource) {
+    this.dataSource = dataSource;
   }
 
   public void add(User user) throws SQLException, ClassNotFoundException {
 //        Class.forName("com.mysql.cj.jdbc.Driver");
-    Connection c = connectionMaker.getConnection();
+    Connection c = dataSource.getConnection();
     PreparedStatement ps = c
         .prepareStatement("insert into users(id, password, name) values(?, ?, ?)");
     ps.setString(1, user.getId());
@@ -26,7 +35,7 @@ public class UserDao {
   }
 
   public User get(String id) throws SQLException, ClassNotFoundException {
-    Connection c = connectionMaker.getConnection();
+    Connection c = dataSource.getConnection();
     PreparedStatement ps = c.prepareStatement(
         "select * from users where id = ?");
     ps.setString(1, id);
@@ -50,9 +59,9 @@ public class UserDao {
     return user;
   }
 
-  public void deleteAll() throws SQLException, ClassNotFoundException {
-    StatementStrategy st = new DeleteAllStatement();
-    jdbcContextWithStatementStrategy(st);
+  public void deleteAll() {
+
+    this.jdbcTemplate.update("delete from users");
   }
 
   public int getCount() throws SQLException, ClassNotFoundException {
@@ -61,7 +70,7 @@ public class UserDao {
     ResultSet rs = null;
 
     try {
-      c = connectionMaker.getConnection();
+      c = dataSource.getConnection();
       ps = c.prepareStatement("select count(*) from users");
 
       ps.executeQuery();
@@ -93,10 +102,6 @@ public class UserDao {
     }
   }
 
-  public void setConnectionMaker(H2Connection connectionMaker) {
-    this.connectionMaker = connectionMaker;
-  }
-
   private PreparedStatement makeStatement(Connection c) throws SQLException {
     PreparedStatement ps;
     ps = c.prepareStatement("delete from users");
@@ -109,7 +114,7 @@ public class UserDao {
     PreparedStatement ps = null;
 
     try {
-      c = connectionMaker.getConnection();
+      c = dataSource.getConnection();
       ps = stmt.makePreparedStatement(c);
     } catch (SQLException e) {
       throw e;
