@@ -23,6 +23,7 @@ class UserDaoJdbcTest {
   @Test
   public void add(){
     User user = new User("minsoozz","1234","김민수");
+    //////////////////////
     userDao.add(user);
   assertThat(user.getId()).isEqualTo("minsoozz");
   }
