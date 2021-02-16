@@ -22,9 +22,9 @@ class UserDaoJdbcTest {
 
   @Test
   public void add(){
-    User user = new User("1","1","1");
+    User user = new User("minsoozz","1234","김민수");
     userDao.add(user);
-  assertThat(user.getId()).isEqualTo("1");
+  assertThat(user.getId()).isEqualTo("minsoozz");
   }
 
 }
