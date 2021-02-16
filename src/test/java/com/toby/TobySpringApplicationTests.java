@@ -40,7 +40,7 @@ class TobySpringApplicationTests {
 
   @Test
   public void addAndGet() throws SQLException, ClassNotFoundException {
-
+/////////////
     dao.deleteAll();
     assertThat(dao.getCount(), is(0));
 
