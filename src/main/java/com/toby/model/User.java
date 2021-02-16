@@ -1,40 +1,18 @@
 package com.toby.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class User {
   String id;
   String password;
   String name;
-
-  public User() {
-  }
-
-  public User(String id, String password, String name) {
-    this.id = id;
-    this.password = password;
-    this.name = name;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public String getName() {
-    return name;
-  }
 }

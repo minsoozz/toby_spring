@@ -9,35 +9,22 @@ public class JdbcContext {
 
   private DataSource dataSource;
 
-  public void setDataSource(DataSource dataSource) {
+  public JdbcContext(DataSource dataSource) {
     this.dataSource = dataSource;
   }
 
-  public void workWithStatementStrategy(StatementStrategy stmt) throws SQLException {
-    Connection c = null;
-    PreparedStatement ps = null;
+  public void executeSql(final String query) throws SQLException {
+    workWithStatementStrategy(c -> c.prepareStatement(query));
 
-    try {
-      c = this.dataSource.getConnection();
+  }
 
-      ps = stmt.makePreparedStatement(c);
 
+  public void workWithStatementStrategy(StatementStrategy strategy) throws SQLException {
+    try (Connection c = dataSource.getConnection();
+        PreparedStatement ps = strategy.makePreparedStatement(c)) {
       ps.executeUpdate();
     } catch (SQLException e) {
       throw e;
-    } finally {
-      if (ps != null) {
-        try {
-          ps.close();
-        } catch (SQLException e) {
-        }
-      }
-      if (c != null) {
-        try {
-          c.close();
-        } catch (SQLException e) {
-        }
-      }
     }
   }
 }
