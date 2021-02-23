@@ -1,4 +1,4 @@
-package com.toby.model;
+package com.toby.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,4 +15,7 @@ public class User {
   String id;
   String password;
   String name;
+  Level level;
+  int login;
+  int recommend;
 }

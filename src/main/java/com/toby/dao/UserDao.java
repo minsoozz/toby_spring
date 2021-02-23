@@ -1,7 +1,7 @@
 package com.toby.dao;
 
 import com.toby.exception.DuplicateUserIdException;
-import com.toby.model.User;
+import com.toby.domain.User;
 import java.util.List;
 
 public interface UserDao {
