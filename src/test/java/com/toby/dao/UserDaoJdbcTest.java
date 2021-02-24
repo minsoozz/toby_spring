@@ -30,9 +30,9 @@ class UserDaoJdbcTest {
 
   @BeforeEach
   public void setUp() {
-    this.user1 = new User("minsoo1", "일민수", "spring1", Level.BASIC, 1, 0);
-    this.user2 = new User("minsoo2", "이민수", "spring2", Level.SILVER, 55, 10);
-    this.user3 = new User("minsoo3", "삼민수", "spring3", Level.GOLD, 100, 40);
+    this.user1 = new User("minsoo1", "일민수", "spring1", Level.BASIC, 49, 0);
+    this.user2 = new User("minsoo2", "이민수", "spring2", Level.SILVER, 50, 0);
+    this.user3 = new User("minsoo3", "삼민수", "spring3", Level.GOLD, 60, 29);
   }
 
   @Test
@@ -45,7 +45,9 @@ class UserDaoJdbcTest {
   @Test
   public void update() {
     dao.deleteAll();
+
     dao.add(user1);
+    dao.add(user2);
 
     user1.setName("오민규");
     user1.setPassword("springno06");
@@ -56,6 +58,9 @@ class UserDaoJdbcTest {
 
     User user1update = dao.get(user1.getId());
     checkSameUser(user1,user1update);
+
+    User user2same = dao.get(user2.getId());
+    checkSameUser(user2,user2same);
   }
 
   @Test

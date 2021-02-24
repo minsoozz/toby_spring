@@ -6,7 +6,6 @@ import com.toby.domain.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +25,18 @@ public class UserDaoJdbc implements UserDao {
     this.jdbcTemplate = new JdbcTemplate(dataSource);
   }
 
-  private RowMapper<User> userMapper =
-      new RowMapper<User>() {
-        @Override
-        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-          User user = new User();
-          user.setId(rs.getString("id"));
-          user.setName(rs.getString("name"));
-          user.setPassword(rs.getString("password"));
-          user.setLevel(Level.valueOf(rs.getInt("level")));
-          user.setLogin(rs.getInt("login"));
-          user.setRecommend(rs.getInt("recommend"));
-          return user;
-        }
-      };
+  private RowMapper<User> userMapper() {
+    return (resultSet, i) -> {
+      User user = new User();
+      user.setId(resultSet.getString("id"));
+      user.setName(resultSet.getString("name"));
+      user.setPassword(resultSet.getString("password"));
+      user.setLevel(Level.valueOf(resultSet.getInt("level")));
+      user.setLogin(resultSet.getInt("login"));
+      user.setRecommend(resultSet.getInt("recommend"));
+      return user;
+    };
+  }
 
   public void add(final User user) {
     this.jdbcTemplate.update(
@@ -79,7 +76,7 @@ public class UserDaoJdbc implements UserDao {
 
   @Override
   public void deleteAll() {
-
+    this.jdbcTemplate.update("delete from users");
   }
 
   @Override
@@ -89,7 +86,7 @@ public class UserDaoJdbc implements UserDao {
 
   @Override
   public List<User> getAll() {
-    return null;
+    return jdbcTemplate.query("select * from users order by id", userMapper());
   }
 
   @Override
