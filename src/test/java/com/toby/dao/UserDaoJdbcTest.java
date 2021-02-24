@@ -30,14 +30,14 @@ class UserDaoJdbcTest {
 
   @BeforeEach
   public void setUp() {
-    this.user1 = new User("minsoo1", "일민수", "spring1", Level.BASIC, 49, 0);
-    this.user2 = new User("minsoo2", "이민수", "spring2", Level.SILVER, 50, 0);
-    this.user3 = new User("minsoo3", "삼민수", "spring3", Level.GOLD, 60, 29);
+    this.user1 = new User("minsoo1", "일민수", "spring1", Level.BASIC, 49, 0,"");
+    this.user2 = new User("minsoo2", "이민수", "spring2", Level.SILVER, 50, 0,"");
+    this.user3 = new User("minsoo3", "삼민수", "spring3", Level.GOLD, 60, 29,"");
   }
 
   @Test
   public void add() {
-    User user = new User("minsoo", "1234", "김민수", Level.GOLD, 1000, 500);
+    User user = new User("minsoo", "1234", "김민수", Level.GOLD, 1000, 500,"");
     dao.add(user);
     assertThat(user.getId()).isEqualTo("minsoo");
   }
