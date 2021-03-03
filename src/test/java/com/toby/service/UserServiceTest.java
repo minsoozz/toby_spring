@@ -104,8 +104,6 @@ class UserServiceTest {
 
     List<User> updated = mockUserDao.getUpdated(); // MockUserDao 로 부터 업데이트 결과를 가져온다.
 
-
-
     assertThat(updated.size()).isEqualTo(2);
     checkUserAndLevel(updated.get(0), "이민수", Level.SILVER);
     checkUserAndLevel(updated.get(1), "사민수", Level.GOLD);
