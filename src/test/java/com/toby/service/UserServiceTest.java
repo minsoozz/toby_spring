@@ -99,7 +99,6 @@ class UserServiceTest {
 
     MockUserDao mockUserDao = new MockUserDao(this.users); // 목 오브젝트로 만든 UserDao 를 직접 DI 해준다
     userServiceImpl.setUserDao(mockUserDao);
-
     userServiceImpl.upgradeLevels();
 
     List<User> updated = mockUserDao.getUpdated(); // MockUserDao 로 부터 업데이트 결과를 가져온다.
@@ -108,7 +107,6 @@ class UserServiceTest {
     checkUserAndLevel(updated.get(0), "이민수", Level.SILVER);
     checkUserAndLevel(updated.get(1), "사민수", Level.GOLD);
   }
-
   private void checkUserAndLevel(User updated, String expectedId, Level expectedLevel) {
     assertThat(updated.getId()).isEqualTo(expectedId);
     assertThat(updated.getLevel()).isEqualTo(expectedLevel);
