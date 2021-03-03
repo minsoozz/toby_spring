@@ -88,8 +88,8 @@ class UserServiceTest {
   }
 
 
-
   static class TestUserService extends UserService {
+
     private String id;
 
     private TestUserService(String id) {
@@ -105,9 +105,29 @@ class UserServiceTest {
     }
   }
 
-/*  @Test
+  @Test
   public void upgradeAllOrNothing() {
     UserService testUserService = new TestUserService(users.get(3).getId());
-    testUserService.setUserDao
-  }*/
+    testUserService.setUserDao(userDao);
+    userDao.deleteAll();
+    for (User user : users) {
+      userDao.add(user);
+    }
+
+    try {
+      testUserService.upgradeLevels();
+      fail("TestUserServiceException expected");
+    } catch (TestUserServiceException e) {
+      checkLevelUpgraded(users.get(1), false);
+    }
+  }
+
+  private void checkLevelUpgraded(User user, boolean upgraded) {
+    User userUpdate = userDao.get(user.getId());
+    if (upgraded) {
+      assertThat(userUpdate.getLevel()).isEqualTo(user.getLevel().nextLevel());
+    } else {
+      assertThat(userUpdate.getLevel()).isEqualTo(user.getLevel());
+    }
+  }
 }

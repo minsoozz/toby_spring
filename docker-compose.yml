@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  soltsdsdb:
+    image: mariadb10.3:v1
+    container_name: mariadb-toby-spring
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db-data/:/var/lib/mysql
+      - ./config/mariadb/custom.cnf:/etc/mysql/mariadb.conf.d/custom.cnf
+      - ./config/dbdata:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: minsoo
+      MYSQL_PASSWORD: 1234
+      MYSQL_DATABASE: toby
+      TZ: Asia/Seoul
+    #restart: always
+    networks:
+      - toby_net
+
+networks:
+  toby_net:
+    driver: bridge
+
+#docker-compose -f docker-compose.dev.yml up -d
+# 최초
+# docker-compose up -d
+# docker-compose logs
+# override 처리
+# docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+# docker-compose logs

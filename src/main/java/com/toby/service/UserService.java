@@ -21,8 +21,12 @@ public class UserService {
 
   private PlatformTransactionManager transactionManager;
 
-  public void setTransactionManager(PlatformTransactionManager transactionManager){
+  public void setTransactionManager(PlatformTransactionManager transactionManager) {
     this.transactionManager = transactionManager;
+  }
+
+  public void setUserDao(UserDao userDao) {
+    this.userDao = userDao;
   }
 
   @Autowired
@@ -89,7 +93,7 @@ public class UserService {
       TransactionSynchronizationManager.unbindResource(this.dataSource);
       TransactionSynchronizationManager.clearSynchronization(); // 동기화 작업 종료 및 정리
     }
-  }*/
+  }
 
 /*  public void upgradeLevels() {
     PlatformTransactionManager transactionManager =
@@ -113,8 +117,8 @@ public class UserService {
 
   public void upgradeLevels() {
 
-    TransactionStatus status =
-   this.transactionManager.getTransaction(new DefaultTransactionDefinition());
+/*    TransactionStatus status =
+        this.transactionManager.getTransaction(new DefaultTransactionDefinition());*/
     try {
       List<User> users = userDao.getAll();
       for (User user : users) {
@@ -122,9 +126,9 @@ public class UserService {
           upgradeLevel(user);
         }
       }
-      this.transactionManager.commit(status);
-    } catch (RuntimeException e){
-      this.transactionManager.rollback(status);
+      /*this.transactionManager.commit(status);*/
+    } catch (RuntimeException e) {
+      /*this.transactionManager.rollback(status);*/
       throw e;
     }
   }
@@ -181,5 +185,7 @@ public class UserService {
 
     }
   }
+
+
 
 }
