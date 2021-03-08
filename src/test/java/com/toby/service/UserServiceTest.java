@@ -2,6 +2,11 @@ package com.toby.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.toby.dao.UserDao;
 import com.toby.domain.Level;
@@ -94,6 +99,24 @@ class UserServiceTest {
   }
 
   @Test
+  public void mockUpgradeLevels() throws Exception {
+    UserServiceImpl userServiceImpl = new UserServiceImpl();
+
+    UserDao mockUserDao = mock(UserDao.class);
+    when(mockUserDao.getAll()).thenReturn(this.users);
+    userServiceImpl.setUserDao(mockUserDao);
+
+    userServiceImpl.upgradeLevels();
+
+    verify(mockUserDao,times(2)).update(any(User.class));
+    verify(mockUserDao,times(2)).update(any(User.class));
+    verify(mockUserDao).update(users.get(1));
+    assertThat(users.get(1).getLevel()).isEqualTo(Level.SILVER);
+    verify(mockUserDao).update(users.get(3));
+    assertThat(users.get(3).getLevel()).isEqualTo(Level.GOLD);
+  }
+
+  @Test
   public void upgradeLevels() throws Exception {
     UserServiceImpl userServiceImpl = new UserServiceImpl(); // 고립된 테스트 에서는 테스트 대상 오브젝트를 직접 생성하면 된다.
 
@@ -107,6 +130,7 @@ class UserServiceTest {
     checkUserAndLevel(updated.get(0), "이민수", Level.SILVER);
     checkUserAndLevel(updated.get(1), "사민수", Level.GOLD);
   }
+
   private void checkUserAndLevel(User updated, String expectedId, Level expectedLevel) {
     assertThat(updated.getId()).isEqualTo(expectedId);
     assertThat(updated.getLevel()).isEqualTo(expectedLevel);
