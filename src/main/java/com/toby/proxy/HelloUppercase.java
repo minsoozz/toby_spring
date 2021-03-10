@@ -1,8 +1,12 @@
 package com.toby.proxy;
 
-public class HelloUppercase implements Hello{
+public class HelloUppercase implements Hello {
 
   Hello hello;
+
+  public HelloUppercase(Hello hello) {
+    this.hello = hello;
+  }
 
   @Override
   public String sayHello(String name) {

@@ -1,7 +1,7 @@
 package com.toby.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -12,12 +12,12 @@ import com.toby.dao.UserDao;
 import com.toby.domain.Level;
 import com.toby.domain.User;
 import com.toby.exception.DuplicateUserIdException;
-import com.toby.service.UserServiceImpl.TestUserService;
+import com.toby.proxy.TransactionHandler;
 import com.toby.service.UserServiceImpl.TestUserService.TestUserServiceException;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -71,9 +71,18 @@ class UserServiceTest {
     TestUserService testUserService = new TestUserService(users.get(3).getId());
     testUserService.setUserDao(userDao);
 
-    UserServiceTx txUserService = new UserServiceTx();
+    TransactionHandler txHandler = new TransactionHandler();
+    txHandler.setTarget(testUserService);
+    txHandler.setTransactionManager(transactionManager);
+    txHandler.setPattern("upgradeLevels");
+
+    UserService txUserService = (UserService) Proxy.newProxyInstance(
+        getClass().getClassLoader(), new Class[] {UserService.class}, txHandler);
+
+
+/*    UserServiceTx txUserService = new UserServiceTx();
     txUserService.setTransactionManager(transactionManager);
-    txUserService.setUserService(testUserService);
+    txUserService.setUserService(testUserService);*/
 
     userDao.deleteAll();
 
