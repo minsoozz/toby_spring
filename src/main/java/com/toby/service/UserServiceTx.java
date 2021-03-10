@@ -9,7 +9,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 @Service
 public class UserServiceTx implements UserService {
 
-  UserService userService;
+  UserService userService;  // 타깃 오브젝트
   PlatformTransactionManager transactionManager;
 
   public void setTransactionManager(PlatformTransactionManager transactionManager) {
@@ -21,18 +21,18 @@ public class UserServiceTx implements UserService {
   }
 
   @Override
-  public void add(User user) {
+  public void add(User user) {  // 메소드 구현과 위임
     userService.add(user);
   }
 
   @Override
-  public void upgradeLevels() {
-    TransactionStatus status = this.transactionManager
+  public void upgradeLevels() { // 메소드 구현
+    TransactionStatus status = this.transactionManager  // 부가기능 수행
         .getTransaction(new DefaultTransactionDefinition());
 
     try {
       userService.upgradeLevels();
-      this.transactionManager.commit(status);
+      this.transactionManager.commit(status); // 부가기능 수행
     } catch (RuntimeException e) {
       this.transactionManager.rollback(status);
       throw e;
