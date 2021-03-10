@@ -3,7 +3,7 @@ package com.toby.service;
 import com.toby.dao.UserDao;
 import com.toby.domain.Level;
 import com.toby.domain.User;
-import com.toby.service.UserServiceImpl.TestUserServiceImpl.TestUserServiceException;
+import com.toby.service.UserServiceImpl.TestUserService.TestUserServiceException;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -45,7 +45,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  public void upgradeLevels() throws Exception {
+  public void upgradeLevels() {
     userDao.deleteAll();
     for (User user : users) {
       userDao.add(user);
@@ -103,7 +103,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  public void upgradeAllOrNothing() throws Exception {
+  public void upgradeAllOrNothing() {
     UserServiceImpl testUserServiceImpl = new TestUserServiceImpl(users.get(3).getId());
     testUserServiceImpl.setUserDao(userDao);
     userDao.deleteAll();
