@@ -3,12 +3,9 @@ package com.toby.service;
 import com.toby.dao.UserDao;
 import com.toby.domain.Level;
 import com.toby.domain.User;
-import com.toby.service.UserService.TestUserService;
-import com.toby.service.UserService.TestUserService.TestUserServiceException;
+import com.toby.service.UserServiceImpl.TestUserServiceImpl.TestUserServiceException;
 import java.util.Arrays;
 import java.util.List;
-import jdk.nashorn.internal.objects.annotations.Setter;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -21,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-class UserServiceTest {
+class UserServiceImplTest {
 
   @Autowired
-  UserService userService;
+  UserServiceImpl userServiceImpl;
 
   @Autowired
   UserDao userDao;
@@ -44,17 +41,17 @@ class UserServiceTest {
 
   @Test
   public void bean() {
-    assertThat(this.userService).isNotNull();
+    assertThat(this.userServiceImpl).isNotNull();
   }
 
   @Test
-  public void upgradeLevels() {
+  public void upgradeLevels() throws Exception {
     userDao.deleteAll();
     for (User user : users) {
       userDao.add(user);
     }
 
-    userService.upgradeLevels();
+    userServiceImpl.upgradeLevels();
 
     checkLevel(users.get(0), Level.BASIC);
     checkLevel(users.get(1), Level.SILVER);
@@ -71,8 +68,8 @@ class UserServiceTest {
     User userWithoutLevel = users.get(0);
     userWithoutLevel.setLevel(null);
 
-    userService.add(userWithLevel);
-    userService.add(userWithoutLevel);
+    userServiceImpl.add(userWithLevel);
+    userServiceImpl.add(userWithoutLevel);
 
     User userWithLevelRead = userDao.get(userWithLevel.getId());
     User userWithoutLevelRead = userDao.get(userWithoutLevel.getId());
@@ -88,11 +85,11 @@ class UserServiceTest {
   }
 
 
-  static class TestUserService extends UserService {
+  static class TestUserServiceImpl extends UserServiceImpl {
 
     private String id;
 
-    private TestUserService(String id) {
+    private TestUserServiceImpl(String id) {
       this.id = id;
     }
 
@@ -106,16 +103,16 @@ class UserServiceTest {
   }
 
   @Test
-  public void upgradeAllOrNothing() {
-    UserService testUserService = new TestUserService(users.get(3).getId());
-    testUserService.setUserDao(userDao);
+  public void upgradeAllOrNothing() throws Exception {
+    UserServiceImpl testUserServiceImpl = new TestUserServiceImpl(users.get(3).getId());
+    testUserServiceImpl.setUserDao(userDao);
     userDao.deleteAll();
     for (User user : users) {
       userDao.add(user);
     }
 
     try {
-      testUserService.upgradeLevels();
+      testUserServiceImpl.upgradeLevels();
       fail("TestUserServiceException expected");
     } catch (TestUserServiceException e) {
       checkLevelUpgraded(users.get(1), false);
