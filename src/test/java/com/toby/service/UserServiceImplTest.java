@@ -15,6 +15,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -126,5 +131,23 @@ class UserServiceImplTest {
     } else {
       assertThat(userUpdate.getLevel()).isEqualTo(user.getLevel());
     }
+  }
+
+  @Test
+  public void mockUpgradeLevels() throws Exception {
+    UserServiceImpl userServiceImpl = new UserServiceImpl();
+
+    UserDao mockUserDao = mock(UserDao.class);
+    when(mockUserDao.getAll()).thenReturn(this.users);
+    userServiceImpl.setUserDao(mockUserDao);
+
+    userServiceImpl.upgradeLevels();
+
+    verify(mockUserDao,times(2)).update(any(User.class));
+    verify(mockUserDao,times(2)).update(any(User.class));
+    verify(mockUserDao).update(users.get(1));
+    assertThat(users.get(1).getLevel()).isEqualTo(Level.SILVER);
+    verify(mockUserDao).update(users.get(3));
+    assertThat(users.get(3).getLevel()).isEqualTo(Level.GOLD);
   }
 }
