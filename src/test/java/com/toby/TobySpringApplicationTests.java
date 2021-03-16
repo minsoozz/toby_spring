@@ -7,7 +7,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import com.toby.dao.DaoFactory;
 import com.toby.dao.UserDao;
-import com.toby.model.User;
+import com.toby.domain.User;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest
-@ContextConfiguration(locations = "/applicationContext.xml")
 class TobySpringApplicationTests {
 
   @Autowired
